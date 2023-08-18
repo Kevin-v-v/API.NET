@@ -7,7 +7,7 @@ using BankAPI.Data.DTOs;
 namespace BankAPI.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class AccountController : ControllerBase {
     public readonly AccountService _accountService;
     public readonly AccountTypeService _accountTypeService;
@@ -20,7 +20,7 @@ public class AccountController : ControllerBase {
         _clientService = clientService;
     }
 
-    [HttpGet]
+    [HttpGet("getall")]
     public async Task<IEnumerable<AccountDtoOut>> Get()
     {
         return await _accountService.GetAll();
@@ -36,7 +36,7 @@ public class AccountController : ControllerBase {
         }
         
     }
-    [HttpPost]
+    [HttpPost("create")]
     public async Task<IActionResult> Create(AccountDtoIn account){
         string validationResult = await validateAccount(account);
         if(validationResult != "Valid"){
@@ -46,7 +46,7 @@ public class AccountController : ControllerBase {
         return CreatedAtAction(nameof(GetById), new {id = newAccount.Id}, newAccount);
     }
 
-    [HttpPut("{id}")]
+    [HttpPut("update/{id}")]
     public async Task<IActionResult> Update(int id, AccountDtoIn account){
         if(id != account.Id)
             return BadRequest(new {message = $"El ID({id}) de la URL no coincide con el ID({account.Id}) del cuerpo de la solicitud."});
@@ -72,7 +72,7 @@ public class AccountController : ControllerBase {
         
     }
 
-    [HttpDelete("{id}")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id){
         
         var accountToDelete = await _accountService.GetById(id);
