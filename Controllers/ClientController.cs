@@ -1,11 +1,13 @@
 using BankAPI.Services;
 using BankAPI.Data.BankModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BankAPI.Controllers;
 
+[Authorize]
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ClientController : ControllerBase {
 
     public readonly ClientService _clientService;
@@ -13,7 +15,7 @@ public class ClientController : ControllerBase {
         _clientService = clientService;
     }
 
-    [HttpGet]
+    [HttpGet("getall")]
     public async Task<IEnumerable<Client>> Get(){
         return await _clientService.GetAll();
     }
@@ -28,13 +30,16 @@ public class ClientController : ControllerBase {
         }
         
     }
-    [HttpPost]
+
+    [Authorize(Policy = "SuperAdmin")]
+    [HttpPost("create")]
     public async Task<IActionResult> Create(Client client){
         Client newClient = await _clientService.Create(client);
         return CreatedAtAction(nameof(GetById), new {id = newClient.Id}, newClient);
     }
 
-    [HttpPut("{id}")]
+    [Authorize(Policy = "SuperAdmin")]
+    [HttpPut("update/{id}")]
     public async Task<IActionResult> Update(int id, Client client){
         if(id != client.Id)
             return BadRequest(new {message = $"El ID({id}) de la URL no coincide con el ID({client.Id}) del cuerpo de la solicitud."});
@@ -50,8 +55,8 @@ public class ClientController : ControllerBase {
 
         
     }
-
-    [HttpDelete("{id}")]
+    [Authorize(Policy = "SuperAdmin")]
+    [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id){
         
         var clientToDelete = await _clientService.GetById(id);

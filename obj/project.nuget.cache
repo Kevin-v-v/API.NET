@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "Zt4BxIBpbsFZCRu0ZGtwBuLrVRM4AXU7klmcOmJzDoSVIuh87TCDHMqnk6HodJtocLk2tFaQi1UaViuBYUbpcA==",
+  "dgSpecHash": "+VOWH3bu1QY+rzsyJR352t10kidAuVr3uGpOff2K2agRRoo+Z9UpX7Lbizl7w4mhJzjZk/WnMvCozEwhxbJURw==",
   "success": true,
   "projectFilePath": "C:\\Users\\kevin_kir9wvk\\Desktop\\Coding\\c#\\CursoNET\\BankAPI\\BankAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\kevin_kir9wvk\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\kevin_kir9wvk\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\kevin_kir9wvk\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\kevin_kir9wvk\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\6.0.21\\microsoft.aspnetcore.authentication.jwtbearer.6.0.21.nupkg.sha512",
     "C:\\Users\\kevin_kir9wvk\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\kevin_kir9wvk\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\kevin_kir9wvk\\.nuget\\packages\\microsoft.data.sqlclient\\5.0.2\\microsoft.data.sqlclient.5.0.2.nupkg.sha512",

@@ -3,9 +3,11 @@ using BankAPI.Data.BankModels;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using BankAPI.Data.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BankAPI.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase {
@@ -36,7 +38,9 @@ public class AccountController : ControllerBase {
         }
         
     }
-    [HttpPost("create")]
+
+    [Authorize(Policy = "SuperAdmin")]
+    [HttpPost("create")] 
     public async Task<IActionResult> Create(AccountDtoIn account){
         string validationResult = await validateAccount(account);
         if(validationResult != "Valid"){
@@ -46,6 +50,7 @@ public class AccountController : ControllerBase {
         return CreatedAtAction(nameof(GetById), new {id = newAccount.Id}, newAccount);
     }
 
+    [Authorize(Policy = "SuperAdmin")]
     [HttpPut("update/{id}")]
     public async Task<IActionResult> Update(int id, AccountDtoIn account){
         if(id != account.Id)
@@ -72,6 +77,7 @@ public class AccountController : ControllerBase {
         
     }
 
+    [Authorize(Policy = "SuperAdmin")]
     [HttpDelete("delete/{id}")]
     public async Task<IActionResult> Delete(int id){
         
