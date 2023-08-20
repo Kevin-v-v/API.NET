@@ -139,6 +139,9 @@ public partial class BankContext : DbContext
             entity.Property(e => e.PhoneNumber)
                 .HasMaxLength(40)
                 .IsUnicode(false);
+            entity.Property(e => e.Pwd)
+                .HasMaxLength(30)
+                .IsUnicode(false);
             entity.Property(e => e.RegDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
