@@ -8,10 +8,12 @@ namespace BankAPI.Services;
 public class AccountService 
 { 
     private readonly BankContext _context;
+    private readonly ClientService _clientService;
 
-    public AccountService(BankContext context) 
+    public AccountService(BankContext context, ClientService clientService) 
     {
         _context = context;
+        _clientService = clientService;
     }
     public async Task<IEnumerable<AccountDtoOut>> GetAll()
     {
@@ -41,7 +43,22 @@ public class AccountService
     {
         return await _context.Accounts.FindAsync(id);
     }
-
+    public async Task<List<AccountDtoOut>?> GetAccountsByClient(int userId)
+    {
+        Client? client = await _clientService.GetById(userId);
+        if(client == null)
+        {
+            return null;
+        }
+        return await _context.Accounts.Where(acc => acc.ClientId == client.Id).Select(a => new AccountDtoOut
+        {
+            Id = a.Id,
+            AccountName = a.AccountTypeNavigation.Name,
+            ClientName = a.Client != null ? a.Client.Name : "",
+            Balance = a.Balance,
+            RegDate = a.RegDate
+        }).ToListAsync();
+    }
     public async Task<Account> Create(AccountDtoIn account)
     {
         Account newAccount = new Account();

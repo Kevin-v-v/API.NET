@@ -20,6 +20,10 @@ public class ClientService{
         return await _context.Clients.FindAsync(id);
     }
 
+    public async Task<Client?> GetByEmail(string email){
+        Client? client = await _context.Clients.Where(client => client.Email == email).SingleOrDefaultAsync();
+        return client;
+    }
     public async Task<Client> Create(Client client){
 
         _context.Clients.Add(client);
