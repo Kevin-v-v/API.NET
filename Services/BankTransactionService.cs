@@ -33,39 +33,6 @@ public class BankTransactionService{
         await _context.SaveChangesAsync();
         return;
     }
-    
-
-    public async Task<string> Withdrawal(BankTransactionDtoIn withdrawalDto, Client client)
-    {
-        Account? account = await _accountService.GetById(withdrawalDto.AccountId);
-        if(account == null){
-            return "Cuenta no existe.";
-        }
-        if(account.ClientId != client.Id){
-            return "Cuenta no pertenece a usuario.";
-        }
-        if(account.Balance < withdrawalDto.Amount){
-            return "Cuenta no posee fondos suficientes";
-        }
-        int transactionType;
-        if(withdrawalDto.ExternalAccount != null && withdrawalDto.ExternalAccount != 0)
-        {
-            transactionType = 4;
-        }else{
-            transactionType = 2;
-        }
-
-        BankTransaction transaction = new BankTransaction();
-        transaction.AccountId = withdrawalDto.AccountId;
-        transaction.Amount = withdrawalDto.Amount;
-        transaction.ExternalAccount = transactionType == 4 ? withdrawalDto.ExternalAccount : null;
-        transaction.TransactionType = transactionType;
-
-        await MakeTransaction(transaction, account);
-
-        return "Success";   
-        
-    }
 
     public async Task DeleteAccount(int accountId){
         Account? account = await _accountService.GetById(accountId);

@@ -45,11 +45,30 @@ public class BankTransactionController : ControllerBase
         {
             return StatusCode(500);
         }
-        string result = await _bankTransactionService.Withdrawal(transactionDto, client);
 
+        int transactionType;
+        if(transactionDto.ExternalAccount != null && transactionDto.ExternalAccount != 0){
+            transactionType = 4; 
+           
+        }else{
+            transactionType = 2;
+        }
+
+        BankTransaction transaction = new BankTransaction();
+        transaction.AccountId = transactionDto.AccountId;
+        transaction.Amount = transactionDto.Amount;
+        transaction.ExternalAccount = transactionType == 3 ? transactionDto.ExternalAccount : null;
+        transaction.TransactionType = transactionType;
+
+        Account? account = await _accountService.GetById(transaction.AccountId);
+
+        string result = ValidateTransaction(transaction, client, account);
+
+        
         if(result != "Success"){
             return BadRequest(new { message = result});
         }else{
+            await _bankTransactionService.MakeTransaction(transaction, account);
             return NoContent();
         }
 
@@ -79,20 +98,11 @@ public class BankTransactionController : ControllerBase
 
         Account? account = await _accountService.GetById(transaction.AccountId);
 
-        string result = "";
-        if(account == null){
-            result = "Cuenta no existe.";
-        }
-        if(account.ClientId != client.Id){
-            result = "Cuenta no pertenece a usuario.";
-        }
-
-        if(transaction.TransactionType != 1 && transaction.TransactionType != 3 && account.Balance < transaction.Amount){
-            result = "Cuenta no posee fondos suficientes";
-        }
+        string result = ValidateTransaction(transaction, client, account);
+        
         
 
-        if(result != ""){
+        if(result != "Success"){
             return BadRequest(new { message = result});
         }else{
             await _bankTransactionService.MakeTransaction(transaction, account);
@@ -128,20 +138,20 @@ public class BankTransactionController : ControllerBase
 
     }
 
-    // public string ValidateTransaction(BankTransaction transaction, Client client, Account? account){
+    private string ValidateTransaction(BankTransaction transaction, Client client, Account? account){
         
-    //     if(account == null){
-    //         return "Cuenta no existe.";
-    //     }
-    //     if(account.ClientId != client.Id){
-    //         return "Cuenta no pertenece a usuario.";
-    //     }
+        if(account == null){
+            return "Cuenta no existe.";
+        }
+        if(account.ClientId != client.Id){
+            return "Cuenta no pertenece a usuario.";
+        }
 
-    //     if(transaction.TransactionType != 1 && transaction.TransactionType != 3 && account.Balance < transaction.Amount){
-    //         return "Cuenta no posee fondos suficientes";
-    //     }
+        if(transaction.TransactionType != 1 && transaction.TransactionType != 3 && account.Balance < transaction.Amount){
+            return "Cuenta no posee fondos suficientes";
+        }
 
-    //     return "Success";
-    // }
+        return "Success";
+    }
 
 }
