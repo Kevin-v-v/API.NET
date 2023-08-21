@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace BankAPI.Controllers;
 
-[Authorize]
+[Authorize(Policy = "Admin")]
 [ApiController]
 [Route("api/[controller]")]
 public class AccountController : ControllerBase {
@@ -21,7 +21,7 @@ public class AccountController : ControllerBase {
         _accountTypeService = accountTypeService;
         _clientService = clientService;
     }
-    [Authorize(Policy = "Client")]
+    
     [HttpGet("getall")]
     public async Task<IEnumerable<AccountDtoOut>> Get()
     {

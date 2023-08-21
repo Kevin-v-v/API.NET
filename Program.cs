@@ -55,7 +55,10 @@ builder.Services.AddAuthorization(options => {
             .AddAuthenticationSchemes("client")
             .Build());
     options.AddPolicy("SuperAdmin", policy => policy.RequireClaim("AdminType", "Super"));
-    options.AddPolicy("Admin", policy => policy.RequireClaim("AdminType"));
+    options.AddPolicy("Admin",new AuthorizationPolicyBuilder()
+            .RequireAuthenticatedUser()
+            .AddAuthenticationSchemes("admin")
+            .Build());
 });
 
 var app = builder.Build();
