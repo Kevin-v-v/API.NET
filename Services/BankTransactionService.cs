@@ -18,6 +18,8 @@ public class BankTransactionService{
     }
 
     public async Task MakeTransaction(BankTransaction transaction, Account account){
+
+
         _context.BankTransactions.Add(transaction);
         await _context.SaveChangesAsync();
         if(transaction.TransactionType == 2 || transaction.TransactionType == 4)
@@ -62,6 +64,18 @@ public class BankTransactionService{
         await MakeTransaction(transaction, account);
 
         return "Success";   
+        
+    }
+
+    public async Task DeleteAccount(int accountId){
+        Account? account = await _accountService.GetById(accountId);
+        if(account != null){
+            //para borrar la cuenta hay que borrar sus transacciones primero por la restriccion de llaves foraneas
+            _context.BankTransactions.RemoveRange(_context.BankTransactions.Where(x => x.AccountId == accountId));
+            await _context.SaveChangesAsync();
+            _context.Accounts.Remove(account);
+            await _context.SaveChangesAsync();
+        }
         
     }
 }
